@@ -1,0 +1,16 @@
+C:\Users\alu201620608\source\repos\angelodc\RoboContador\RoboContador\obj\Debug\RoboContador.csprojAssemblyReference.cache
+C:\Users\alu201620608\source\repos\angelodc\RoboContador\RoboContador\obj\Debug\RoboContador.Form1.resources
+C:\Users\alu201620608\source\repos\angelodc\RoboContador\RoboContador\obj\Debug\RoboContador.Properties.Resources.resources
+C:\Users\alu201620608\source\repos\angelodc\RoboContador\RoboContador\obj\Debug\RoboContador.csproj.GenerateResource.cache
+C:\Users\alu201620608\source\repos\angelodc\RoboContador\RoboContador\bin\Debug\RoboContador.exe.config
+C:\Users\alu201620608\source\repos\angelodc\RoboContador\RoboContador\bin\Debug\RoboContador.exe
+C:\Users\alu201620608\source\repos\angelodc\RoboContador\RoboContador\bin\Debug\RoboContador.pdb
+C:\Users\alu201620608\source\repos\angelodc\RoboContador\RoboContador\bin\Debug\ExcelManager.dll
+C:\Users\alu201620608\source\repos\angelodc\RoboContador\RoboContador\bin\Debug\itextsharp.dll
+C:\Users\alu201620608\source\repos\angelodc\RoboContador\RoboContador\bin\Debug\WebDriver.dll
+C:\Users\alu201620608\source\repos\angelodc\RoboContador\RoboContador\bin\Debug\ExcelManager.pdb
+C:\Users\alu201620608\source\repos\angelodc\RoboContador\RoboContador\bin\Debug\itextsharp.xml
+C:\Users\alu201620608\source\repos\angelodc\RoboContador\RoboContador\bin\Debug\WebDriver.xml
+C:\Users\alu201620608\source\repos\angelodc\RoboContador\RoboContador\obj\Debug\RoboContador.csproj.CopyComplete
+C:\Users\alu201620608\source\repos\angelodc\RoboContador\RoboContador\obj\Debug\RoboContador.exe
+C:\Users\alu201620608\source\repos\angelodc\RoboContador\RoboContador\obj\Debug\RoboContador.pdb
