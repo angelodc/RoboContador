@@ -9,10 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.IO;
-//using System.Web.Script.Serialization;
 using System.Data.SqlClient;
 using System.Data;
-//using System.Data.SQLite;
 using System.Configuration;
 //using Dapper;
 
@@ -28,9 +26,10 @@ namespace RoboContador
         /// <summary>
         /// Busca todos alunos na planilha Excel.
         /// </summary>
-        /// <param name="directory">Diretório da planilha excel.</param>
-        /// <returns>Lista de alunos.</returns>
-        public static List<Aluno> BuscarListaAlunos(String directory, string estado = "RS")
+        /// <param name="directory"></param>
+        /// <param name="estado"></param>
+        /// <returns></returns>
+        public static List<Aluno> BuscarListaAlunos(String directory)
         {
             try
             {
@@ -38,7 +37,6 @@ namespace RoboContador
                 int rowCount = xlRange.Rows.Count;
                 int colCount = xlRange.Columns.Count;
 
-                //Dictionary<string, string> alunoss = new Dictionary<string, string>();
                 List<Aluno> alunos = new List<Aluno>();
 
                 for (int i = 2; i <= rowCount; i++)
@@ -74,16 +72,7 @@ namespace RoboContador
                         aluno.Cpf = cpf;
                         aluno.Nome = nome;
                         aluno.Semestre = semestre;
-                        aluno.Estado = estado;
-                        //if (!alunos.ContainsKey(cpf))
-                        //{
-                        //    alunoss.Add(cpf, nome);
-                        //}
-                        //else
-                        //{
-                        //    string a = alunos[key];
-                        //    //throw new Exception("ERRO DE CPF");
-                        //}
+                        //aluno.Estado = estado;
                         if (!alunos.Contains(aluno))
                         {
                             alunos.Add(aluno);
@@ -132,10 +121,6 @@ namespace RoboContador
 
         public static bool VerificarLinhaVazia(string cpf, string nome)
         {
-            //if (key.Equals(null) || value.Equals(string.Empty))
-            //{
-            //    return true;
-            //}
             if (cpf.Equals(string.Empty) || nome.Equals(string.Empty))
             {
                 return true;

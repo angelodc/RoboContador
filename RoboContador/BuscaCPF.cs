@@ -19,25 +19,20 @@ namespace RoboContador
         /// 
         /// </summary>
         /// <param name="alunos">lista dos alunos os quais precisam buscar o cpf</param>
-        /// <param name="etapa">se é a primeira ou segunda fase da OAB</param>
-        /// <param name="nrExame"></param>
-        /// <param name="apenasAprovados"></param>
-        public string BuscarCPF(List<Aluno> alunos = null, int etapa = 1, string nrExame = "XXIX", bool apenasAprovados = true)
+        /// <param name="nrExame">nr do exame(1 ou 2 (acho))</param>
+        /// <param name="anoExame">ano do exame</param>
+        public string BuscarCPF(List<Aluno> alunos = null, string nrExame = "1", string anoExame = "2019")
         {
             List<Aluno> listaFinal = new List<Aluno>();
 
             if (alunos.Count == 0)
             {
-                if (apenasAprovados)
-                {
-                    return "Nenhum aluno com nome igual ao da lista encontrado.";
-                }
                 return "Nenhum aluno encontrado no excel selecionado.";
             }
 
             try
             {
-                string site = "https://fgvprojetos.fgv.br/node/135";
+                string site = "https://cfc.org.br/category/exame-de-suficiencia-anteriores/";
                 driver = CreateDriver(site);
 
                 foreach (Aluno aluno in alunos)
@@ -45,70 +40,55 @@ namespace RoboContador
                     //Escolhe qual o nr do exame a ser pesquisado
                     try
                     {
-                        driver.FindElement(By.LinkText(string.Format("Clique aqui para acessar informações relativas ao {0} Exame de Ordem Unificado", nrExame))).Click();
+                        driver.FindElement(By.XPath(string.Format("(//a[contains(@href, \'https://cfc.org.br/exame-de-suficiencia-anteriores/{0}o-exame-de-suficiencia-de-{1}/\')])[2]", nrExame, anoExame))).Click();
                     }
                     catch
                     {
                         return "Exame selecionado não está disponivel para consulta no momento.";
                     }
 
-                    //Escolha dropdown do estado
-                    IWebElement dropdown = driver.FindElement(By.Id("ContentPlaceHolder1_listSeccional"));
-                    dropdown.FindElement(By.XPath(string.Format("option[. = 'OAB / {0}']", aluno.Estado))).Click();
-                    //dropdown.FindElement(By.XPath("//option[. = 'OAB / " + aluno.Estado + "']")).Click();
-
-                    //Escolhe fase da prova a consultar -> depois desse abre outra janela
-                    if (etapa == 1)
+                    //Clica no local de prova
+                    try
                     {
-                        driver.FindElement(By.LinkText("Consulta Local de Realização da Prova Objetiva (1ª fase)")).Click();
+                        driver.FindElement(By.CssSelector("p:nth-child(23) strong")).Click();
                     }
-                    else
+                    catch
                     {
-                        try
-                        {
-                            driver.FindElement(By.LinkText("Consulta Local de Realização da Prova Prático-Profissional (2ª fase)")).Click();
-                        }
-                        catch
-                        {
-                            return "2ª fase ainda não disponivel para consulta.";
-                        }
+                        return "Ocorreu um erro ao tentar verificar o local de prova.";
                     }
 
-                    // Seleciona a nova janela
-                    driver.SwitchTo().Window(driver.WindowHandles.Last());
-
-                    // Coloca o cpf
+                    //Escreve cpf
                     driver.FindElement(By.Id("ContentPlaceHolder1_UserName")).SendKeys(aluno.Cpf);
 
-                    //Pesquisa o cpf
-                    driver.FindElement(By.Id("ContentPlaceHolder1_BtnPesquisar")).Click();
+                    //clica em entrar
+                    driver.FindElement(By.Id("ContentPlaceHolder1_LoginButton")).Click();
 
-                    if (!driver.PageSource.Contains("Não foi localizado local de prova para o CPF informado."))
-                    {
-                        //Fecha janela de aviso
-                        driver.FindElement(By.Id("lkProsseguir")).Click();
 
-                        if (!apenasAprovados || driver.FindElement(By.Id("dtlLocalProva_CodInscricaoLabel_0")).Text == aluno.Inscricao.ToString())
-                        {
-                            //colocar aluno na tabela do excell
-                            listaFinal.Add(aluno);
-                        }
-                    }
 
-                    driver.Close();
 
-                    //Seleciona a nova janela
-                    driver.SwitchTo().Window(driver.WindowHandles.Last());
+
+                    //if (!driver.PageSource.Contains("Não foi localizado local de prova para o CPF informado."))
+                    //{
+                    //    //Fecha janela de aviso
+                    //    driver.FindElement(By.Id("lkProsseguir")).Click();
+
+                    //    if (!apenasAprovados || driver.FindElement(By.Id("dtlLocalProva_CodInscricaoLabel_0")).Text == aluno.Inscricao.ToString())
+                    //    {
+                    //        //colocar aluno na tabela do excell
+                    //        listaFinal.Add(aluno);
+                    //    }
+                    //}
+
+                    //driver.Close();
+
+                    ////Seleciona a nova janela
+                    //driver.SwitchTo().Window(driver.WindowHandles.Last());
                     driver.Navigate().GoToUrl(site);
                 }
 
                 if (listaFinal.Count == 0)
                 {
-                    if (apenasAprovados)
-                    {
-                        return "Nenhum aluno do excel selecionado passou nessa etapa da OAB.";
-                    }
-                    return "Nenhum aluno do excel selecionado esta realizando essa etapa da OAB.";
+                    return "Nenhum aluno do excel selecionado passou/esta realizando essa etapa da OAB.";
                 }
 
                 //chamar funçao que cria tabela do excell com a listaFinal
