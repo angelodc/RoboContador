@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,9 +29,6 @@ namespace RoboContador
 
                 ConvertePDF pdftxt = new ConvertePDF();
                 String texto = pdftxt.ExtrairTexto_PDF(txtCaminoNomePDF.Text);
-                texto.Replace("\n", " ");
-                texto.TrimEnd(new char[] { '\n' });
-                texto.TrimStart(new char[] { '\n' });
 
                 //pega as listas de aluno do pdf e faz match com nomes do excel
                 alunos = PegarMatchAluno(alunosExcel, texto);
@@ -57,10 +55,93 @@ namespace RoboContador
         List<Aluno> PegarMatchAluno(List<Aluno> alunosExcel, string texto)
         {
             List<Aluno> alunos = new List<Aluno>();
+
             //
             //DOUGLAS, FAZER TEU CODIGO AQUI!!!
             //
+            texto.Replace("\n", " ");
+            string[] pdfDividido = texto.Split(' ');
+            bool estaNainscricao= false, estaNoNome = false;int b = 0; 
+            string nome= string.Empty, inscricao = string.Empty;
+            double numero = 0;
+            int teste = 0;
+            foreach (string i in pdfDividido)
+            {
+
+                pdfDividido[b] = pdfDividido[b].TrimStart(new char[] { '\n' });
+                pdfDividido[b] = pdfDividido[b].TrimEnd(new char[] { '\n' });
+
+                if(pdfDividido[b] == "Nome")
+                {
+                    estaNainscricao = true;
+                }else if (pdfDividido[b] == "Inscrição")
+                {
+                    estaNoNome = false;
+                }
+                if (estaNoNome == true && double.TryParse(pdfDividido[b], out numero))
+
+                {
+
+                    estaNainscricao = true;
+                    estaNoNome = false;
+                    if (!inscricao.Equals(string.Empty))
+                    {
+                        nome.Trim();
+                        foreach (Aluno alunoExcel in alunosExcel)
+                        {
+                            teste++;
+                            if (RemoveDiacritics(alunoExcel.Nome.ToUpper()) == RemoveDiacritics(nome.Trim().ToUpper()))
+                            {
+
+                                Aluno aluno = new Aluno(nome.Trim(), "RS", "POA", inscricao.Trim(), "", "");
+                                alunos.Add(aluno);
+                            }
+                        }
+                    }
+
+                    
+                    nome = string.Empty; inscricao = string.Empty;
+                }
+
+                if (estaNainscricao == true && double.TryParse(pdfDividido[b], out numero))
+                {
+                    inscricao = pdfDividido[b];
+                    estaNainscricao = false;
+                    estaNoNome = true;
+                }else if (estaNoNome == true)
+                {
+                    nome += pdfDividido[b]+ " ";
+                }
+
+                b++;
+            }
+
+
             return alunos;
+        }
+
+
+
+        /// <summary>
+        /// Metodo para tirar acento de strings
+        /// </summary>
+        /// <param name="text">string a qual voce quer retirar os acentos</param>
+        /// <returns></returns>
+        string RemoveDiacritics(string text)
+        {
+            var normalizedString = text.Normalize(NormalizationForm.FormD);
+            var stringBuilder = new StringBuilder();
+
+            foreach (var c in normalizedString)
+            {
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
 
         private void BtnProcurarExcel_Click(object sender, EventArgs e)
@@ -101,6 +182,29 @@ namespace RoboContador
                 label1.Visible = false;
                 btnProcurar.Visible = false;
                 txtCaminoNomePDF.Visible = false;
+            }
+        }
+
+        private void btnProcurar_Click(object sender, EventArgs e)
+        {
+            //define as propriedades do controle 
+            //OpenFileDialog
+            this.ofd1.Multiselect = false;
+            this.ofd1.Title = "Selecionar PDF";
+            ofd1.InitialDirectory = @"C:\dados";
+            //filtra para exibir somente arquivos de imagens
+            ofd1.Filter = "All files (*.*)|*.*" + "Files (*.PDF)|*.PDF|";
+            ofd1.CheckFileExists = true;
+            ofd1.CheckPathExists = true;
+            ofd1.FilterIndex = 2;
+            ofd1.RestoreDirectory = true;
+            ofd1.ReadOnlyChecked = true;
+            ofd1.ShowReadOnly = false;
+
+            DialogResult dr = this.ofd1.ShowDialog();
+            if (dr == System.Windows.Forms.DialogResult.OK)
+            {
+                txtCaminoNomePDF.Text = ofd1.FileName;
             }
         }
     }
