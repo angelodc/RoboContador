@@ -98,9 +98,9 @@ namespace RoboContador
             catch (Exception exception)
             {
                 string s = exception.Message;
-                return "Erro não esperado encontrado, tente novamente mais tarde ou contate os Alunxs Brilhantes." + Environment.NewLine + exception.Message;
+                return "Erro não esperado encontrado, tente novamente mais tarde ou contate os Alunxs Brilhantes." +
+                    Environment.NewLine + exception.Message;
             }
-
             return "Programa finalizado com sucesso." + Environment.NewLine + "Favor salvar o arquivo de Excel.";
         }
 

@@ -52,10 +52,6 @@ namespace RoboContador
                         if (cpf.Equals(string.Empty))
                         {
                             cpf = PopularAluno(cellHead, cellValue, "CPF");
-                            if (!cpf.Equals(string.Empty))
-                            {
-                                cpf = TratarCpf(cpf);
-                            }
                         }
                         if (nome.Equals(string.Empty))
                         {
@@ -172,7 +168,7 @@ namespace RoboContador
                         string cpf = (cellValue.Text.ToString() as String).Trim();
                         if (cpf != "Não informado")
                         {
-                            return cpf;
+                            return TratarCpf(cpf);
                         }
                         break;
                     case "NOME":

@@ -27,8 +27,9 @@ namespace RoboContador
                 //pega lista de alunos do excel
                 List<Aluno> alunosExcel = Dados.BuscarListaAlunos(TbNomeEnderecoExcel.Text);
 
-                ConvertePDF pdftxt = new ConvertePDF();
-                String texto = pdftxt.ExtrairTexto_PDF(txtCaminoNomePDF.Text);
+                //ConvertePDF pdftxt = new ConvertePDF();
+                //String texto = pdftxt.ExtrairTexto_PDF(txtCaminoNomePDF.Text);
+                String texto = new ConvertePDF().ExtrairTexto_PDF(txtCaminoNomePDF.Text);
 
                 //pega as listas de aluno do pdf e faz match com nomes do excel
                 alunos = PegarMatchAluno(alunosExcel, texto);
@@ -39,10 +40,14 @@ namespace RoboContador
                 alunos = Dados.BuscarListaAlunos(TbNomeEnderecoExcel.Text);
             }
 
-            BuscaCPF busca = new BuscaCPF();
-            //O 1 TEM Q SER O NR DO EXAME
-            //O 2019 TEM Q SER O ANO DO EXAME!!!
-            MessageBox.Show(busca.BuscarCPF(alunos, "1", "2019"));
+            string nrExame = "1";
+            if (rb2Fase.Checked)
+            {
+                nrExame = "2";
+            }
+            //BuscaCPF busca = new BuscaCPF();
+            //MessageBox.Show(busca.BuscarCPF(alunos, nrExame, numericUpDown1.Value.ToString()));
+            MessageBox.Show(new BuscaCPF().BuscarCPF(alunos, nrExame, numericUpDown1.Value.ToString()));
             Cursor.Current = Cursors.Default;
         }
 
@@ -56,13 +61,10 @@ namespace RoboContador
         {
             List<Aluno> alunos = new List<Aluno>();
 
-            //
-            //DOUGLAS, FAZER TEU CODIGO AQUI!!!
-            //
             texto.Replace("\n", " ");
             string[] pdfDividido = texto.Split(' ');
-            bool estaNainscricao= false, estaNoNome = false;int b = 0; 
-            string nome= string.Empty, inscricao = string.Empty;
+            bool estaNainscricao = false, estaNoNome = false; int b = 0;
+            string nome = string.Empty, inscricao = string.Empty;
             double numero = 0;
             int teste = 0;
             foreach (string i in pdfDividido)
@@ -71,17 +73,16 @@ namespace RoboContador
                 pdfDividido[b] = pdfDividido[b].TrimStart(new char[] { '\n' });
                 pdfDividido[b] = pdfDividido[b].TrimEnd(new char[] { '\n' });
 
-                if(pdfDividido[b] == "Nome")
+                if (pdfDividido[b] == "Nome")
                 {
                     estaNainscricao = true;
-                }else if (pdfDividido[b] == "Inscrição")
+                }
+                else if (pdfDividido[b] == "Inscrição")
                 {
                     estaNoNome = false;
                 }
                 if (estaNoNome == true && double.TryParse(pdfDividido[b], out numero))
-
                 {
-
                     estaNainscricao = true;
                     estaNoNome = false;
                     if (!inscricao.Equals(string.Empty))
@@ -92,35 +93,27 @@ namespace RoboContador
                             teste++;
                             if (RemoveDiacritics(alunoExcel.Nome.ToUpper()) == RemoveDiacritics(nome.Trim().ToUpper()))
                             {
-
                                 Aluno aluno = new Aluno(nome.Trim(), "RS", "POA", inscricao.Trim(), "", "");
                                 alunos.Add(aluno);
                             }
                         }
                     }
-
-                    
                     nome = string.Empty; inscricao = string.Empty;
                 }
-
                 if (estaNainscricao == true && double.TryParse(pdfDividido[b], out numero))
                 {
                     inscricao = pdfDividido[b];
                     estaNainscricao = false;
                     estaNoNome = true;
-                }else if (estaNoNome == true)
-                {
-                    nome += pdfDividido[b]+ " ";
                 }
-
+                else if (estaNoNome == true)
+                {
+                    nome += pdfDividido[b] + " ";
+                }
                 b++;
             }
-
-
             return alunos;
         }
-
-
 
         /// <summary>
         /// Metodo para tirar acento de strings
@@ -140,7 +133,6 @@ namespace RoboContador
                     stringBuilder.Append(c);
                 }
             }
-
             return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
 
