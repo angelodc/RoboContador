@@ -40,7 +40,7 @@ namespace RoboContador
                     //Escolhe qual o nr do exame a ser pesquisado
                     try
                     {
-                        driver.FindElement(By.XPath(string.Format("(//a[contains(@href, \'https://cfc.org.br/exame-de-suficiencia-anteriores/{0}o-exame-de-suficiencia-de-{1}/\')])[2]", nrExame, anoExame))).Click();
+                        ClickElement(driver.FindElement(By.XPath(string.Format("(//a[contains(@href, \'https://cfc.org.br/exame-de-suficiencia-anteriores/{0}o-exame-de-suficiencia-de-{1}/\')])[2]", nrExame, anoExame))));
                     }
                     catch
                     {
@@ -50,7 +50,7 @@ namespace RoboContador
                     //Clica no local de prova
                     try
                     {
-                        driver.FindElement(By.CssSelector("p:nth-child(23) strong")).Click();
+                        ClickElement(driver.FindElement(By.CssSelector("p:nth-child(23) strong")));
                     }
                     catch
                     {
@@ -67,17 +67,14 @@ namespace RoboContador
 
 
 
-                    //if (!driver.PageSource.Contains("Não foi localizado local de prova para o CPF informado."))
-                    //{
-                    //    //Fecha janela de aviso
-                    //    driver.FindElement(By.Id("lkProsseguir")).Click();
-
-                    //    if (!apenasAprovados || driver.FindElement(By.Id("dtlLocalProva_CodInscricaoLabel_0")).Text == aluno.Inscricao.ToString())
-                    //    {
-                    //        //colocar aluno na tabela do excell
-                    //        listaFinal.Add(aluno);
-                    //    }
-                    //}
+                    if (!driver.PageSource.Contains("Não foi encontrado nenhum local de prova para esse CPF."))
+                    {
+                        //if (!apenasAprovados || driver.FindElement(By.Id("dtlLocalProva_CodInscricaoLabel_0")).Text == aluno.Inscricao.ToString())
+                        //{
+                        //    //colocar aluno na tabela do excell
+                        //}
+                        listaFinal.Add(aluno);
+                    }
 
                     //driver.Close();
 
@@ -114,6 +111,14 @@ namespace RoboContador
             driver.Url = url;
             driver.Manage().Timeouts().ImplicitWait = new TimeSpan(0, 3, 0);
             return driver;
+        }
+
+        void ClickElement(IWebElement element)
+        {
+            Actions actions = new Actions(driver);
+            actions.MoveToElement(element);
+            actions.Perform();
+            element.Click();
         }
     }
 }

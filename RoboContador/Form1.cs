@@ -93,7 +93,7 @@ namespace RoboContador
                             teste++;
                             if (RemoveDiacritics(alunoExcel.Nome.ToUpper()) == RemoveDiacritics(nome.Trim().ToUpper()))
                             {
-                                Aluno aluno = new Aluno(nome.Trim(), "RS", "POA", inscricao.Trim(), "", "");
+                                Aluno aluno = new Aluno(nome.Trim(), "RS", "POA", inscricao.Trim(), alunoExcel.Cpf, alunoExcel.Semestre);
                                 alunos.Add(aluno);
                             }
                         }

@@ -14,3 +14,5 @@ C:\Users\alu201620608\source\repos\angelodc\RoboContador\RoboContador\bin\Debug\
 C:\Users\alu201620608\source\repos\angelodc\RoboContador\RoboContador\obj\Debug\RoboContador.csproj.CopyComplete
 C:\Users\alu201620608\source\repos\angelodc\RoboContador\RoboContador\obj\Debug\RoboContador.exe
 C:\Users\alu201620608\source\repos\angelodc\RoboContador\RoboContador\obj\Debug\RoboContador.pdb
+C:\Users\alu201620608\source\repos\angelodc\RoboContador\RoboContador\bin\Debug\Newtonsoft.Json.dll
+C:\Users\alu201620608\source\repos\angelodc\RoboContador\RoboContador\bin\Debug\Newtonsoft.Json.xml
