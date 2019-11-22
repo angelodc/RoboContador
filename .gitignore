@@ -1,1 +1,5 @@
-*/.vs/*
+#vs Parte1
+RoboContador/.vs/RoboContador/v16/.suo
+
+#vs Parte2
+RoboContador/.vs/RoboContador/v16/Server/sqlite3/storage.ide
